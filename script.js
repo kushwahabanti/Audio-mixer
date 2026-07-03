@@ -9,7 +9,18 @@ class AudioManager {
         this.audioElement.load();
     }
     play() {
-        if (this.audioElement.src) this.audioElement.play();
+        if (!this.audioElement.src || this.audioElement.src === window.location.href) {
+            alert("Please upload an audio file first!");
+            return;
+        }
+        
+        const playPromise = this.audioElement.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.error("Playback failed:", error);
+                alert("Playback failed: " + error.message);
+            });
+        }
     }
     pause() {
         this.audioElement.pause();
@@ -135,10 +146,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Helper: Update Playback Button UI
+    function updatePlaybackUI(activeBtn) {
+        [playBtn, pauseBtn, stopBtn].forEach(btn => {
+            btn.classList.remove('active-playback');
+            if (btn !== playBtn) btn.classList.add('secondary-btn');
+        });
+        
+        if (activeBtn) {
+            activeBtn.classList.add('active-playback');
+            activeBtn.classList.remove('secondary-btn');
+        }
+    }
+
     // 2. Playback Controls
-    playBtn.addEventListener('click', () => audioManager.play());
-    pauseBtn.addEventListener('click', () => audioManager.pause());
-    stopBtn.addEventListener('click', () => audioManager.stop());
+    playBtn.addEventListener('click', () => {
+        if (!hiddenAudioPlayer.src || hiddenAudioPlayer.src === window.location.href) {
+            return audioManager.play(); // Let the manager handle the alert
+        }
+        audioManager.play();
+        updatePlaybackUI(playBtn);
+    });
+    
+    pauseBtn.addEventListener('click', () => {
+        if (!hiddenAudioPlayer.src || hiddenAudioPlayer.src === window.location.href) return;
+        audioManager.pause();
+        updatePlaybackUI(pauseBtn);
+    });
+    
+    stopBtn.addEventListener('click', () => {
+        if (!hiddenAudioPlayer.src || hiddenAudioPlayer.src === window.location.href) return;
+        audioManager.stop();
+        updatePlaybackUI(stopBtn);
+    });
+    
+    // Also update UI when audio naturally ends
+    hiddenAudioPlayer.addEventListener('ended', () => {
+        updatePlaybackUI(stopBtn);
+    });
     
     muteBtn.addEventListener('click', () => {
         isMuted = !isMuted;
