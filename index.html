@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Audio Mix Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Audio Mix Manager</h1>
+            <p>Professional Undo/Redo Volume Controller</p>
+        </header>
+
+        <main class="main-layout">
+            <section class="left-panel">
+                <!-- Upload Section -->
+                <div class="card upload-section">
+                    <h2>1. Upload Audio</h2>
+                    <label for="audioUpload" class="file-upload-label">
+                        <span id="uploadText">Choose MP3/WAV file...</span>
+                        <input type="file" id="audioUpload" accept="audio/mp3, audio/wav" class="hidden">
+                    </label>
+                    <audio id="hiddenAudioPlayer" class="hidden"></audio>
+                </div>
+
+                <!-- Controls Section -->
+                <div class="card controls-section">
+                    <h2>2. Playback Controls</h2>
+                    <div class="btn-group">
+                        <button id="playBtn" class="btn primary-btn">Play</button>
+                        <button id="pauseBtn" class="btn secondary-btn">Pause</button>
+                        <button id="stopBtn" class="btn secondary-btn">Stop</button>
+                        <button id="muteBtn" class="btn danger-btn">Mute</button>
+                    </div>
+                </div>
+
+                <!-- Volume & Undo Section -->
+                <div class="card volume-section">
+                    <h2>3. Volume Editing</h2>
+                    <div class="volume-slider-container">
+                        <label for="volumeSlider">Volume Level</label>
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+                        <div id="volumeStatus" class="status-display">Current Volume: 100%</div>
+                    </div>
+                    
+                    <div class="history-controls">
+                        <button id="undoBtn" class="btn history-btn" disabled>Undo (Ctrl+Z)</button>
+                        <button id="redoBtn" class="btn history-btn" disabled>Redo (Ctrl+Y)</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="right-panel">
+                <!-- History Panel -->
+                <div class="card history-panel-card">
+                    <div class="history-header">
+                        <h2>Edit History</h2>
+                        <button id="resetBtn" class="btn text-btn">Reset Project</button>
+                    </div>
+                    <div id="historyPanel" class="history-list">
+                        <!-- History items injected by historyManager.js -->
+                        <div class="empty-state">No edits in history.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
